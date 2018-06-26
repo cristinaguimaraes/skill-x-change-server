@@ -17,6 +17,10 @@
   },
   "homepage": "https://github.com/cristinaguimaraes/skill-x-change-server#readme",
   "dependencies": {
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "nodemon": "^1.17.5"
     "dotenv": "^6.0.0",
     "eslint-plugin-json": "^1.2.0",
     "mysql2": "^1.5.3",
