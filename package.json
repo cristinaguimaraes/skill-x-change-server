@@ -15,5 +15,15 @@
   "bugs": {
     "url": "https://github.com/cristinaguimaraes/skill-x-change-server/issues"
   },
-  "homepage": "https://github.com/cristinaguimaraes/skill-x-change-server#readme"
+  "homepage": "https://github.com/cristinaguimaraes/skill-x-change-server#readme",
+  "dependencies": {
+    "dotenv": "^6.0.0",
+    "eslint-plugin-json": "^1.2.0",
+    "mysql2": "^1.5.3",
+    "sequelize": "^4.38.0"
+  },
+  "devDependencies": {
+    "eslint": "^5.0.1",
+    "eslint-plugin-standard": "^3.1.0"
+  }
 }
