@@ -1,0 +1,19 @@
+{
+  "name": "skill-x-change-server",
+  "version": "1.0.0",
+  "description": "skill-x-change (working title) is a platform for creating social connections by teaching and learning from eachothers.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cristinaguimaraes/skill-x-change-server.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cristinaguimaraes/skill-x-change-server/issues"
+  },
+  "homepage": "https://github.com/cristinaguimaraes/skill-x-change-server#readme"
+}
