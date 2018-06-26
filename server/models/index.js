@@ -5,7 +5,7 @@ const path      = require('path');
 const Sequelize = require('sequelize');
 const basename  = path.basename(__filename);
 const db        = {};
-require('dotenv').config();
+require('dotenv').config({path:__dirname+'/./../../.env'});
 
 const dbPort = process.env.DB_PORT || 3306;
 
