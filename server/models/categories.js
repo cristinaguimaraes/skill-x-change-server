@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     pk_category_id: {
       type: DataTypes.UUID,
       primaryKey: true,
-      defalultValue: DataTypes.UUIDV4
+      defaultValue: DataTypes.UUIDV4
     },
     name: {type: DataTypes.STRING(30), allowNull: false},
     img_url: {type: DataTypes.STRING}

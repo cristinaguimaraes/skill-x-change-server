@@ -5,13 +5,13 @@ module.exports = (sequelize, DataTypes) => {
     pk_skill_id: {
       type: DataTypes.UUID,
       primaryKey: true,
-      defalultValue: DataTypes.UUIDV4
+      defaultValue: DataTypes.UUIDV4
     },
     title: {type: DataTypes.STRING(50), allowNull: false},
     description: {type: DataTypes.STRING(400)},
     location: {type: DataTypes.STRING, allowNull: false},
-    counter_visits: {type: DataTypes.INTEGER, defalultValue: 0},
-    deleted: {type: DataTypes.BOOLEAN, defalultValue: false},
+    counter_visits: {type: DataTypes.INTEGER, defaultValue: 0},
+    deleted: {type: DataTypes.BOOLEAN, defaultValue: false},
     img_url: {type: DataTypes.STRING}
   },
   {underscored: true});

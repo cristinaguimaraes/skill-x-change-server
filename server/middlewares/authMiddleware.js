@@ -1,3 +1,3 @@
-exports.authorizeUser = () => {
-
+exports.authorizeUser = (req, res, next) => {
+  next();
 };

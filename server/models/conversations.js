@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     pk_conversation_id: {
       type: DataTypes.UUID,
       primaryKey: true,
-      defalultValue: DataTypes.UUIDV4
+      defaultValue: DataTypes.UUIDV4
     },
     approved: {type: DataTypes.INTEGER, allowNull: false, defaultValue: 0}
   },

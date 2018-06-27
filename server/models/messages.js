@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     pk_message_id: {
       type: DataTypes.UUID,
       primaryKey: true,
-      defalultValue: DataTypes.UUIDV4
+      defaultValue: DataTypes.UUIDV4
     },
     // TODO : check if Sequelize.NOW is working properly
     time_stamp: {type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW},

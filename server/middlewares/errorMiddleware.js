@@ -1,14 +1,13 @@
-
-const errorHandler = async (ctx, next) => {
+const errorHandler = async (req, res, next) => {
   try {
     await next();
   } catch (err) {
     //eslint-disable-next-line
     console.error(err);
-    ctx.body = undefined;
-    ctx.status = ctx.status >= 400 &&  ctx.status || 400;
+    req.body = undefined;
+    req.status = req.status >= 400 &&  req.status || 400;
     if (err.message) {
-      ctx.body = {
+      req.body = {
         errors: [err.message]
       };
     }
