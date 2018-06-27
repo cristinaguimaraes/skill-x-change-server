@@ -9,7 +9,7 @@ const conversationsController = require('../controllers/conversationsController.
 const reviewsController = require('../controllers/reviewsController.js');
 
 
-router.get('/me', authorizeUser, usersController.me);
+router.get('/me', () => authorizeUser, usersController.me);
 router.put('/me', authorizeUser, usersController.updateMe);
 router.get('/user/:id', usersController.getUser);
 router.get('/categories', categoriesController.getCategories);
