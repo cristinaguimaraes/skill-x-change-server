@@ -4,7 +4,7 @@
   "description": "skill-x-change (working title) is a platform for creating social connections by teaching and learning from eachothers.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon server/index.js"
   },
   "repository": {
     "type": "git",
@@ -24,7 +24,8 @@
     "express": "^4.16.3",
     "mysql2": "^1.5.3",
     "nodemon": "^1.17.5",
-    "sequelize": "^4.38.0"
+    "sequelize": "^4.38.0",
+    "uuid": "^3.3.0"
   },
   "devDependencies": {
     "eslint": "^5.0.1",

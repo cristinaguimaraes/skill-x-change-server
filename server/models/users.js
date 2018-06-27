@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       primaryKey: true,
       // the default value is used to automatically generate the id in MySQL
-      defalultValue: DataTypes.UUIDV4
+      defaultValue: DataTypes.UUIDV4
     },
     name: {type: DataTypes.STRING(30), allowNull: false},
     surname: {type: DataTypes.STRING(50), allowNull: false},

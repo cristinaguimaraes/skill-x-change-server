@@ -1,44 +1,59 @@
 const db = require('../models');
+const uuidv4 = require('uuid/v4');
 
 
 exports.createConversation = async (req, res) =>{
   await db.Conversation.create ({
+    pk_conversation_id: uuidv4(),
     fk_sender_user_id: req.body.fk_sender_user_id,
     fk_skill_id: req.body.fk_skill_id,
     approved: 0
   });
-  res.status = 201;
+  res.status(201).send('Created!');
 };
 
 exports.acceptConversation = async (req, res) =>{
-  const conversationId = req.params.id;
-  await db.Skill.update({
-    where:{
-      pk_conversation_id: conversationId
-    }
-  }, {
-    approved: 1}
-  );
-  res.status = 200;
+  try {
+    const conversationId = req.params.id;
+    await db.Conversation.update({
+      approved: 1
+    }, {
+      where:{
+        pk_conversation_id: conversationId
+      }
+    });
+    res.status(200).send('Accepted!');
+  }  catch (e) {
+    res.status(404).send(e);
+  }
 };
 
 exports.rejectConversation = async (req, res) =>{
-  const conversationId = req.params.id;
-  await db.Skill.update({
-    where:{
-      pk_conversation_id: conversationId
-    }
-  }, {
-    approved: 2}
-  );
-  res.status = 200;
+  try {
+    const conversationId = req.params.id;
+    await db.Conversation.update({
+      approved: 2
+    }, {
+      where:{
+        pk_conversation_id: conversationId
+      }
+    });
+    res.status(200).send('Accepted!');
+  }  catch (e) {
+    res.status(404).send(e);
+  }
 };
 
 exports.createMessage = async (req, res) => {
-  const conversationId = req.params.id;
-  await db.Message.create ({
-    fk_conversation_id: conversationId,
-    message: req.body.messsage,
-  });
-  res.status = 201;
+  try {
+    const conversationId = req.params.id;
+    await db.Message.create ({
+      pk_message_id: uuidv4(),
+      fk_conversation_id: conversationId,
+      message: req.body.message,
+    });
+    res.status(201).send('Created!');
+  } catch (e) {
+    res.status(404).send(e);
+  }
 };

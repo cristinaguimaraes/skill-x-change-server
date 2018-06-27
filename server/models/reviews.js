@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     pk_review_id: {
       type: DataTypes.UUID,
       primaryKey: true,
-      defalultValue: DataTypes.UUIDV4
+      defaultValue: DataTypes.UUIDV4
     },
     description: {type: DataTypes.STRING(400), allowNull: false},
     // TODO : check if DataTypes.NOW is working properly
