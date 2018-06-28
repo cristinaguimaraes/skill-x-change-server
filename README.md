@@ -53,7 +53,7 @@ FB_APP_SECRET=
 In a new tab in the terminal, run:
 ```
 npm install
-node createCategories.js
+node server/createCategories.js
 npm run dev
 ```
 
