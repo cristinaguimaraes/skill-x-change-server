@@ -8,6 +8,9 @@ const errorMiddleware = require('./middlewares/errorMiddleware');
 const authMiddleware = require('./middlewares/authMiddleware');
 const routes = require('./routes/');
 const models = require('./models');
+require('dotenv').config({path:__dirname+'/./../../.env'});
+
+const serverPort = process.env.SERVER_PORT || 3306;
 
 app
   .use(cors())
@@ -19,7 +22,7 @@ app
 models.sequelize.sync().then(function () {
   // eslint-disable-next-line
   console.log('Database already sync')
-  app.listen(3000, () =>
+  app.listen(serverPort, () =>
   // eslint-disable-next-line
-  console.log('Server listening on port 3000!'));
+  console.log('Server listening on port:', serverPort));
 });

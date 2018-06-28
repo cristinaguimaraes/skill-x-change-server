@@ -14,6 +14,7 @@ exports.authorizeUser = async (req, res, next) => {
   }
 
   const token = authHeader.split('Bearer ')[1];
+  console.log('token:', token);
 
   // Generating the appsecret_proof
   //
@@ -22,8 +23,9 @@ exports.authorizeUser = async (req, res, next) => {
   // appsecret_proof facebook server won't respond to any petition
 
   const appSecret = process.env.FB_APP_SECRET;
+  console.log('appSecret:',appSecret);
   const appsecretProof = CryptoJS.HmacSHA256(token, appSecret).toString(CryptoJS.enc.Hex);
-
+  console.log('appsecretProof:',appsecretProof);
   const baseUrl = 'https://graph.facebook.com/me?fields=id,name,email,picture,first_name,last_name,middle_name,name_format,short_name&access_token=';
   const response = await fetch(baseUrl+token+'&appsecret_proof='+appsecretProof);
   const fb_res = await response.json();
