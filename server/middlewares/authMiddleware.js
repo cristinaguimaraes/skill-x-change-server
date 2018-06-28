@@ -1,6 +1,10 @@
 const fetch = require('node-fetch');
 const db = require('../models');
 
+const CryptoJS = require('crypto-js');
+require('dotenv').config({path:__dirname+'/./../../.env'});
+
+
 exports.authorizeUser = async (req, res, next) => {
   const authHeader = req.headers.authorization;
 
@@ -10,9 +14,21 @@ exports.authorizeUser = async (req, res, next) => {
   }
 
   const token = authHeader.split('Bearer ')[1];
+
+  // Generating the appsecret_proof
+  //
+  // It's way to make calls to the fb server in a protected way
+  // the user token can be stolen in the client side, but without this
+  // appsecret_proof facebook server won't respond to any petition
+
+  const appSecret = process.env.FB_APP_SECRET;
+  const appsecretProof = CryptoJS.HmacSHA256(token, appSecret).toString(CryptoJS.enc.Hex);
+
   const baseUrl = 'https://graph.facebook.com/me?fields=id,name,email,picture,first_name,last_name,middle_name,name_format,short_name&access_token=';
-  const response = await fetch(baseUrl+token);
+  const response = await fetch(baseUrl+token+'&appsecret_proof='+appsecretProof);
   const fb_res = await response.json();
+
+  console.log('========>>>>> fb_res:', fb_res);
 
   if (fb_res.hasOwnProperty('error')) {
     res.status(401).send(fb_res.error.message);
