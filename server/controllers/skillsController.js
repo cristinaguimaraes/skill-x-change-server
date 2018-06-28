@@ -1,6 +1,4 @@
 const db = require('../models');
-const uuidv4 = require('uuid/v4');
-
 
 exports.getSkills = async (req, res) =>{
 
@@ -27,7 +25,6 @@ exports.getSkills = async (req, res) =>{
       const skills = shuffled.slice(0,3);
       res.status(200).send(skills);
     }
-  //  res.status(200).send(skills);
   } catch (e) {
     res.status(404).send(e);
   }
@@ -55,7 +52,6 @@ exports.getSkill = async (req, res) =>{
 exports.createSkill = async (req, res) =>{
   try {
     await db.Skill.create({
-      pk_skill_id: uuidv4(),
       title: req.body.title,
       description: req.body.description,
       img_url: req.body.img_url,
