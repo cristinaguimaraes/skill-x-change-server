@@ -46,12 +46,14 @@ ENV=develop
 DB_PORT=3306
 DB_USER='your mysql user'
 DB_PASSWORD='your mysql password'
+README.md
 ``` 
 ## 4. Run the server
 
 In a new tab in the terminal, run:
 ```
 npm install
+node createCategories.js
 npm run dev
 ```
 
