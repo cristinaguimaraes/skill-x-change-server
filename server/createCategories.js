@@ -28,7 +28,8 @@ const categoryArr = [
 // console.log('uuidv4 from sequelize', uuidv4());
 
 categoryArr.forEach(async category => {
-  await db.Category.create({name: category.name,
-                            img_url: category.img_url,
-                            pk_category_id: uuidv4()});
+  await db.Category.create ({
+    name: category.name,
+    img_url: category.img_url
+  });
 });

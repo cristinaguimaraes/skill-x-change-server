@@ -1,5 +1,4 @@
 const db = require('../models');
-const uuidv4 = require('uuid/v4');
 const Op = db.Sequelize.Op;
 
 exports.me = async (req, res) =>{
@@ -44,6 +43,7 @@ exports.me = async (req, res) =>{
 
 exports.updateMe = async (req, res) =>{
   try {
+    console.log(req.body);
     if (Object.keys(req.body).length > 7) return res.status(400)
     await db.User.update({
       ...req.body

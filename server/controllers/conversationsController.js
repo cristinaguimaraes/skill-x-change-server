@@ -1,10 +1,7 @@
 const db = require('../models');
-const uuidv4 = require('uuid/v4');
-
 
 exports.createConversation = async (req, res) =>{
   await db.Conversation.create ({
-    pk_conversation_id: uuidv4(),
     fk_sender_user_id: req.body.fk_sender_user_id,
     fk_skill_id: req.body.fk_skill_id,
     approved: 0
@@ -48,7 +45,6 @@ exports.createMessage = async (req, res) => {
   try {
     const conversationId = req.params.id;
     await db.Message.create ({
-      pk_message_id: uuidv4(),
       fk_conversation_id: conversationId,
       message: req.body.message,
     });
