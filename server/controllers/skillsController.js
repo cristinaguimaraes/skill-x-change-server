@@ -23,7 +23,8 @@ exports.getSkills = async (req, res) =>{
           location: location,
           deleted: 0
         },
-        include: [db.User]
+        include: [{model: db.User,
+                  attributes : ['name', 'pk_user_id']}]
       });
     }
     const superSkills = skills.map(skill => {
