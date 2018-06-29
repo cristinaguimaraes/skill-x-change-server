@@ -1,30 +1,41 @@
 const db = require('../models');
+const Op = db.Sequelize.Op;
 
 exports.getSkills = async (req, res) =>{
 
   try {
     const location = req.query.location;
     const categoryId = req.query.category_id;
+    let skills;
+
     if (categoryId) {
-      const skills = await db.Skill.findAll({
+      skills = await db.Skill.findAll({
         where:{
           location: location,
           fk_category_id: categoryId,
           deleted: 0
-        }
+        },
+        include: [db.User]
       });
-      res.status(200).send(skills);
     } else {
-      const allSkills = await db.Skill.findAll({
+      skills = await db.Skill.findAll({
         where:{
           location: location,
           deleted: 0
-        }
+        },
+        include: [db.User]
       });
-      const shuffled = await allSkills.sort((a,b) => {return 0.5 - Math.random();});
-      const skills = shuffled.slice(0,3);
-      res.status(200).send(skills);
     }
+    const superSkills = skills.map(skill => {
+      return ({...skill.dataValues,
+        creator_name: skill.dataValues.User.dataValues.name,
+        creator_id: skill.dataValues.User.dataValues.pk_user_id,
+      })
+    });
+
+    const shuffledSkills = await superSkills.sort((a,b) => {return 0.5 - Math.random();});
+    // const skills = shuffled.slice(0,15);
+    res.status(200).send(shuffledSkills);
   } catch (e) {
     res.status(404).send(e);
   }
