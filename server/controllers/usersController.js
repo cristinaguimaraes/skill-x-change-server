@@ -76,11 +76,26 @@ exports.me = async (req, res) =>{
           // [Op.or]: conversationsId
           [Op.or]: conFromSkillsId
         }
+      },
+      include: {model: db.Conversation,
+        attributes: ['fk_sender_user_id'],
+        include: [{model: db.User, attributes: ['name']}, {model: db.Skill, attributes: ['title']}]
       }
     });
 
-    user.dataValues.skills = await skills;
-    user.dataValues.reviews = await reviews;
+    reviewsFiltered = reviews.map(review => {
+      const reviewFiltered = {
+        ...review.dataValues,
+        reviewer_name: review.dataValues.Conversation.User.name,
+        skill_title: review.dataValues.Conversation.Skill.title,
+      }
+      delete reviewFiltered.Conversation;
+      console.log('reviewFiltered:', reviewFiltered);
+      return reviewFiltered;
+    });
+
+    user.dataValues.skills = skills;
+    user.dataValues.reviews = reviewsFiltered;
     user.dataValues.conversationsFromSkills = consFromSkillsFiltered;
     user.dataValues.conversationsFromUser = consFromUserFiltered;
     res.status = 200;
