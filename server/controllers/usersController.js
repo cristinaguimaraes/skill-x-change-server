@@ -17,28 +17,92 @@ exports.me = async (req, res) =>{
       }
     });
     const skillsId = await skills.map(skill => skill.pk_skill_id);
-    const conversations = await db.Conversation.findAll({
-      where:{
+
+    // search conversations that have skills belonging to the user
+    const conversationsFromSkills = await db.Conversation.findAll({
+      where: {
         fk_skill_id: {
           [Op.or]: skillsId
         }
-      }
+      },
+      include: [db.User]
     });
-    const conversationsId = await conversations.map(conversation => conversation.pk_conversation_id);
+
+    consFromSkillsFiltered = conversationsFromSkills.map(con => {
+      const conFiltered = {
+        ...con.dataValues,
+        sender_name: con.dataValues.User.name,
+        sender_img_url: con.dataValues.User.img_url,
+      }
+      delete conFiltered.User;
+      console.log('conFiltered:', conFiltered);
+      return conFiltered;
+    })
+
+    // search conversations started by the user
+    const conversationsFromUser = await db.Conversation.findAll({
+      where: {
+        fk_sender_user_id: userId
+      },
+      include : [{
+        model: db.Skill,
+        attributes: ['title'],
+        include: [{
+          model: db.User,
+          attributes: ['name', 'img_url']
+        }]
+      }]
+    });
+
+    consFromUserFiltered = conversationsFromUser.map(con => {
+      const conFiltered = {
+        ...con.dataValues,
+        skill_title: con.dataValues.Skill.title,
+        skill_creator: con.dataValues.Skill.User.name,
+        skill_creator_img_url: con.dataValues.Skill.User.img_url
+      }
+      delete conFiltered.Skill;
+      console.log('conFiltered:', conFiltered);
+      return conFiltered;
+    });
+
+    const conFromSkillsId = conversationsFromSkills.map(conv => conv.pk_conversation_id);
+    const conFromUserId = conversationsFromUser.map(conv => conv.pk_conversation_id);
+    const conversationsId = [...conFromSkillsId, ...conFromUserId];
+    // TODO probably we only need the reviews from the user skills
     const reviews = await db.Review.findAll({
       where:{
         fk_conversation_id: {
-          [Op.or]: conversationsId
+          // [Op.or]: conversationsId
+          [Op.or]: conFromSkillsId
         }
+      },
+      include: {model: db.Conversation,
+        attributes: ['fk_sender_user_id'],
+        include: [{model: db.User, attributes: ['name']}, {model: db.Skill, attributes: ['title']}]
       }
     });
-    user.dataValues.skills = await skills;
-    user.dataValues.reviews = await reviews;
-    user.dataValues.conversations = conversations;
+
+    reviewsFiltered = reviews.map(review => {
+      const reviewFiltered = {
+        ...review.dataValues,
+        reviewer_name: review.dataValues.Conversation.User.name,
+        skill_title: review.dataValues.Conversation.Skill.title,
+      }
+      delete reviewFiltered.Conversation;
+      console.log('reviewFiltered:', reviewFiltered);
+      return reviewFiltered;
+    });
+
+    user.dataValues.skills = skills;
+    user.dataValues.reviews = reviewsFiltered;
+    user.dataValues.conversationsFromSkills = consFromSkillsFiltered;
+    user.dataValues.conversationsFromUser = consFromUserFiltered;
     res.status = 200;
     res.send(user);
   } catch (e) {
-    res.status(404).send(e);
+    res.status = 404;
+    res.send(e);
   }
 };
 
