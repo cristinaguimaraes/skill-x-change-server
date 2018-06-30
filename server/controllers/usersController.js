@@ -34,6 +34,7 @@ exports.me = async (req, res) =>{
     });
     user.dataValues.skills = await skills;
     user.dataValues.reviews = await reviews;
+    user.dataValues.conversations = conversations;
     res.status = 200;
     res.send(user);
   } catch (e) {
