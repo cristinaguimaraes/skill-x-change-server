@@ -28,7 +28,6 @@ exports.getSkills = async (req, res) =>{
       });
     }
 
-    console.log();
     const superSkills = skills.map(skill => {
       const newSkill = {...skill.dataValues,
         creator_name: skill.dataValues.User.dataValues.name,
@@ -62,13 +61,30 @@ exports.getSkill = async (req, res) =>{
     // .then((skill) => {
     //   res.status(200).send(skill);
     // });
-    const conversations = await db.Conversation.findAll({where: {fk_skill_id: skill.pk_skill_id}});
+    const conversations = await db.Conversation.findAll({
+      where: {
+        fk_skill_id: skill.pk_skill_id
+      },
+      include: [{model: db.User,
+                attributes : ['name', 'surname', 'img_url']}]
+    });
     const conversationsId = conversations.map(conversation => conversation.pk_conversation_id)
+    const Sender = conversations.map(conversation => conversation.dataValues.User.dataValues)
+
     const reviews = await db.Review.findAll({where: {
       fk_conversation_id: { [Op.or]: conversationsId}
     }});
 
-    skill.dataValues.reviews = reviews;
+    const SuperReviews = reviews.map((review, index) => {
+      const newReview = {...review.dataValues,
+        sender_name: Sender[index].name,
+        sender_surname: Sender[index].surname,
+        sender_img: Sender[index].img_url
+      }
+      return newReview
+    })
+
+    skill.dataValues.reviews = SuperReviews;
     res.status(200).send(skill);
   } catch (e) {
     res.status(404).send(e);
