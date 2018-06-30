@@ -6,6 +6,8 @@ require('dotenv').config({path:__dirname+'/./../../.env'});
 
 
 exports.authorizeUser = async (req, res, next) => {
+  // if (process.env.SKIP_AUTH) next();
+
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {

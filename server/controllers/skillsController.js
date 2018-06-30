@@ -27,12 +27,18 @@ exports.getSkills = async (req, res) =>{
                   attributes : ['name', 'pk_user_id']}]
       });
     }
+
+    console.log();
     const superSkills = skills.map(skill => {
-      return ({...skill.dataValues,
+      const newSkill = {...skill.dataValues,
         creator_name: skill.dataValues.User.dataValues.name,
         creator_id: skill.dataValues.User.dataValues.pk_user_id,
-      })
+      }
+      delete newSkill.User;
+      delete newSkill.fk_user_id;
+      return newSkill;
     });
+
 
     const shuffledSkills = await superSkills.sort((a,b) => {return 0.5 - Math.random();});
     // const skills = shuffled.slice(0,15);
@@ -52,9 +58,18 @@ exports.getSkill = async (req, res) =>{
       }
     }).then((skill) => {
       return skill.increment('counter_visits');
-    }).then((skill) => {
-      res.status(200).send(skill);
-    });
+    })
+    // .then((skill) => {
+    //   res.status(200).send(skill);
+    // });
+    const conversations = await db.Conversation.findAll({where: {fk_skill_id: skill.pk_skill_id}});
+    const conversationsId = conversations.map(conversation => conversation.pk_conversation_id)
+    const reviews = await db.Review.findAll({where: {
+      fk_conversation_id: { [Op.or]: conversationsId}
+    }});
+
+    skill.dataValues.reviews = reviews;
+    res.status(200).send(skill);
   } catch (e) {
     res.status(404).send(e);
   }
