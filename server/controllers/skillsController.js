@@ -75,7 +75,7 @@ exports.getSkill = async (req, res) =>{
       fk_conversation_id: { [Op.or]: conversationsId}
     }});
 
-    const SuperReviews = reviews.map((review, index) => {
+    const superReviews = reviews.map((review, index) => {
       const newReview = {...review.dataValues,
         sender_name: Sender[index].name,
         sender_surname: Sender[index].surname,
@@ -84,7 +84,7 @@ exports.getSkill = async (req, res) =>{
       return newReview
     })
 
-    skill.dataValues.reviews = SuperReviews;
+    skill.dataValues.reviews = superReviews;
     res.status(200).send(skill);
   } catch (e) {
     res.status(404).send(e);

@@ -75,13 +75,15 @@ exports.getUser = async (req, res) =>{
     });
     const skillsId = await skills.map(skill => skill.pk_skill_id);
     const conversations = await db.Conversation.findAll({
-      where:{
-        fk_skill_id: {
-          [Op.or]: skillsId
-        }
-      }
+      where: {
+        fk_skill_id: skillsId
+      },
+      include: [{model: db.User,
+                attributes : ['name', 'surname', 'img_url']}]
     });
     const conversationsId = await conversations.map(conversation => conversation.pk_conversation_id);
+    const Sender = conversations.map(conversation => conversation.dataValues.User.dataValues)
+
     const reviews = await db.Review.findAll({
       where:{
         fk_conversation_id: {
@@ -89,8 +91,17 @@ exports.getUser = async (req, res) =>{
         }
       }
     });
-    user.dataValues.skills = await skills;
-    user.dataValues.reviews = await reviews;
+    const superReviews = reviews.map((review, index) => {
+      const newReview = {...review.dataValues,
+        sender_name: Sender[index].name,
+        sender_surname: Sender[index].surname,
+        sender_img: Sender[index].img_url
+      }
+      return newReview
+    })
+
+    user.dataValues.skills =  skills;
+    user.dataValues.reviews = superReviews;
 
     res.status = 200;
     res.send(user);
