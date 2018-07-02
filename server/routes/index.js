@@ -18,6 +18,7 @@ router.post('/skills', /*authorizeUser,*/ skillsController.createSkill);
 router.get('/skills/:id', skillsController.getSkill);
 router.put('/skills/:id', authorizeUser, skillsController.deleteSkill);
 router.post('/conversation', authorizeUser, conversationsController.createConversation);
+router.get('/conversation/:id', authorizeUser, conversationsController.getConversation);
 router.put('/conversation/:id/accept', authorizeUser,conversationsController.acceptConversation);
 router.put('/conversation/:id/reject', authorizeUser, conversationsController.rejectConversation);
 router.post('/message/:id', authorizeUser, conversationsController.createMessage);

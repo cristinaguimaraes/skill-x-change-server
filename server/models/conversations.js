@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4
     },
+    request_message: {type: DataTypes.STRING},
     approved: {type: DataTypes.INTEGER, allowNull: false, defaultValue: 0}
   },
   {underscored: true});
