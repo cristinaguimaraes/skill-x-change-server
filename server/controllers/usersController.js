@@ -42,7 +42,6 @@ exports.me = async (req, res) =>{
       }
       delete conFiltered.Skill;
       delete conFiltered.User;
-      console.log('conFiltered:', conFiltered);
       return conFiltered;
     })
 

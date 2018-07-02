@@ -63,9 +63,17 @@ exports.acceptConversation = async (req, res) =>{
     const conversationId = req.params.id;
     await db.Conversation.update({
       approved: 1
-    }, {
+    },
+    {
       where:{
-        pk_conversation_id: conversationId
+        pk_conversation_id: conversationId,
+        $Skill.User.pk_user_id$: req.pk_user_id
+      },
+      include: {
+        model: db.Skill,
+        include: {
+          model: db.User
+        }
       }
     });
     res.status(200).send({response: 'Accepted!'});
