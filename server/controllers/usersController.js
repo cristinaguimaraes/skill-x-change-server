@@ -25,15 +25,22 @@ exports.me = async (req, res) =>{
           [Op.or]: skillsId
         }
       },
-      include: [db.User]
+      include: [
+        {model: db.User},
+        {model: db.Skill,
+          attributes: ['title']
+          }
+        ]
     });
 
     consFromSkillsFiltered = conversationsFromSkills.map(con => {
       const conFiltered = {
         ...con.dataValues,
-        sender_name: con.dataValues.User.name,
-        sender_img_url: con.dataValues.User.img_url,
+        skill_title: con.dataValues.Skill.title,
+        contact_name: con.dataValues.User.name,
+        contact_img_url: con.dataValues.User.img_url
       }
+      delete conFiltered.Skill;
       delete conFiltered.User;
       console.log('conFiltered:', conFiltered);
       return conFiltered;
@@ -58,8 +65,8 @@ exports.me = async (req, res) =>{
       const conFiltered = {
         ...con.dataValues,
         skill_title: con.dataValues.Skill.title,
-        skill_creator: con.dataValues.Skill.User.name,
-        skill_creator_img_url: con.dataValues.Skill.User.img_url
+        contact_name: con.dataValues.Skill.User.name,
+        contact_img_url: con.dataValues.Skill.User.img_url
       }
       delete conFiltered.Skill;
       console.log('conFiltered:', conFiltered);
@@ -96,8 +103,8 @@ exports.me = async (req, res) =>{
 
     user.dataValues.skills = skills;
     user.dataValues.reviews = reviewsFiltered;
-    user.dataValues.conversationsFromSkills = consFromSkillsFiltered;
-    user.dataValues.conversationsFromUser = consFromUserFiltered;
+    user.dataValues.conversationsStartedByMe = consFromSkillsFiltered;
+    user.dataValues.conversationsStartedByOthers = consFromUserFiltered;
     res.status = 200;
     res.send(user);
   } catch (e) {
