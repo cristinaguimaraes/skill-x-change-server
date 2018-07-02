@@ -42,7 +42,6 @@ exports.me = async (req, res) =>{
       }
       delete conFiltered.Skill;
       delete conFiltered.User;
-      console.log('conFiltered:', conFiltered);
       return conFiltered;
     })
 
@@ -69,7 +68,6 @@ exports.me = async (req, res) =>{
         contact_img_url: con.dataValues.Skill.User.img_url
       }
       delete conFiltered.Skill;
-      console.log('conFiltered:', conFiltered);
       return conFiltered;
     });
 
@@ -97,7 +95,6 @@ exports.me = async (req, res) =>{
         skill_title: review.dataValues.Conversation.Skill.title,
       }
       delete reviewFiltered.Conversation;
-      console.log('reviewFiltered:', reviewFiltered);
       return reviewFiltered;
     });
 
@@ -115,7 +112,6 @@ exports.me = async (req, res) =>{
 
 exports.updateMe = async (req, res) =>{
   try {
-    console.log(req.body);
     if (Object.keys(req.body).length > 7) return res.status(400)
     await db.User.update({
       ...req.body

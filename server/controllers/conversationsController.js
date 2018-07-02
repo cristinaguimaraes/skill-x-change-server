@@ -12,7 +12,6 @@ exports.createConversation = async (req, res) =>{
 
 exports.getConversation = async (req, res) => {
   const conversationId = req.params.id;
-  console.log('inside getConversation, conversationId:', conversationId);
   try {
     const conversation = await db.Conversation.findOne({
       where: {
@@ -44,7 +43,6 @@ exports.getConversation = async (req, res) => {
     };
     delete conFiltered.Skill;
     delete conFiltered.User;
-    console.log('conFiltered:', conFiltered);
 
     const messages = await db.Message.findAll({
       where: {fk_conversation_id: conversationId}
@@ -61,14 +59,37 @@ exports.getConversation = async (req, res) => {
 exports.acceptConversation = async (req, res) =>{
   try {
     const conversationId = req.params.id;
-    await db.Conversation.update({
-      approved: 1
-    }, {
+
+    const dbRes = await db.Conversation.findOne({
       where:{
-        pk_conversation_id: conversationId
+        pk_conversation_id: conversationId,
+      }
+      ,
+      include: {
+        model: db.Skill,
+        include : {
+          model: db.User,
+          where: {
+            pk_user_id: req.pk_user_id
+          }
+        }
       }
     });
-    res.status(200).send({response: 'Accepted!'});
+
+    if (dbRes.dataValues.Skill) {
+      const updateRes = await db.Conversation.update({
+        approved: 1
+      },
+      {
+        where:{
+          pk_conversation_id: conversationId
+        }
+      });
+      res.status(200).send({response: 'Accepted!'});
+    } else {
+      res.status(401).send({response: 'The user is not the creator of the Skill'});
+    }
+
   }  catch (e) {
     res.status(404).send(e);
   }
@@ -84,7 +105,7 @@ exports.rejectConversation = async (req, res) =>{
         pk_conversation_id: conversationId
       }
     });
-    res.status(200).send({response: 'Accepted!'});
+    res.status(200).send({response: 'Rejected!'});
   }  catch (e) {
     res.status(404).send(e);
   }
