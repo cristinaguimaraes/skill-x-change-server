@@ -103,8 +103,8 @@ exports.me = async (req, res) =>{
 
     user.dataValues.skills = skills;
     user.dataValues.reviews = reviewsFiltered;
-    user.dataValues.conversationsStartedByMe = consFromSkillsFiltered;
-    user.dataValues.conversationsStartedByOthers = consFromUserFiltered;
+    user.dataValues.conversationsStartedByOthers = consFromSkillsFiltered;
+    user.dataValues.conversationsStartedByMe = consFromUserFiltered;
     res.status = 200;
     res.send(user);
   } catch (e) {
