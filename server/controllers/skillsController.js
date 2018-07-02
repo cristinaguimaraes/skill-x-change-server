@@ -1,32 +1,50 @@
 const db = require('../models');
 const Op = db.Sequelize.Op;
 
-exports.getSkills = async (req, res) =>{
-
+exports.getSkill = async (req, res) =>{
   try {
-    const location = req.query.location;
-    const categoryId = req.query.category_id;
-    let skills;
+    const skillId = req.params.id;
+    const skill = await db.Skill.findOne({
+      where:{
+        pk_skill_id: skillId,
+        deleted: 0
+      }
+    }).then((skill) => {
+    return skill.increment('counter_visits');
+    })
+    const conversations = await db.Conversation.findAll({
+      where: {
+        fk_skill_id: skill.pk_skill_id
+      },
+      include: [{model: db.User,
+                attributes : ['name', 'surname', 'img_url']}]
+    });
+    if (conversations.length > 0) {
+    const conversationsId = conversations.map(conversation => conversation.pk_conversation_id)
+    const Sender = conversations.map(conversation => conversation.dataValues.User.dataValues)
 
-    if (categoryId) {
-      skills = await db.Skill.findAll({
-        where:{
-          location: location,
-          fk_category_id: categoryId,
-          deleted: 0
-        },
-        include: [db.User]
-      });
-    } else {
-      skills = await db.Skill.findAll({
-        where:{
-          location: location,
-          deleted: 0
-        },
-        include: [{model: db.User,
-                  attributes : ['name', 'pk_user_id']}]
-      });
-    }
+    const reviews = await db.Review.findAll({where: {
+      fk_conversation_id: { [Op.or]: conversationsId}
+    }});
+
+    const superReviews = reviews.map((review, index) => {
+    const newReview = {...review.dataValues,
+        sender_name: Sender[index].name,
+        sender_surname: Sender[index].surname,
+        sender_img: Sender[index].img_url
+      }
+      return newReview
+    })
+     skill.dataValues.reviews = superReviews
+   } else {
+     skill.dataValues.reviews =[];
+   }
+   console.log(skill);
+   res.status(200).send(skill);
+  } catch (e) {
+    res.status(404).send(e);
+  }
+};
 
     const superSkills = skills.map(skill => {
       const newSkill = {...skill.dataValues,
