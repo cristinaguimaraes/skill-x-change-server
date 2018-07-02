@@ -56,11 +56,8 @@ exports.getSkill = async (req, res) =>{
         deleted: 0
       }
     }).then((skill) => {
-      return skill.increment('counter_visits');
+    return skill.increment('counter_visits');
     })
-    // .then((skill) => {
-    //   res.status(200).send(skill);
-    // });
     const conversations = await db.Conversation.findAll({
       where: {
         fk_skill_id: skill.pk_skill_id
@@ -68,6 +65,7 @@ exports.getSkill = async (req, res) =>{
       include: [{model: db.User,
                 attributes : ['name', 'surname', 'img_url']}]
     });
+    if (conversations.length > 0) {
     const conversationsId = conversations.map(conversation => conversation.pk_conversation_id)
     const Sender = conversations.map(conversation => conversation.dataValues.User.dataValues)
 
@@ -83,9 +81,12 @@ exports.getSkill = async (req, res) =>{
       }
       return newReview
     })
-
-    skill.dataValues.reviews = superReviews;
-    res.status(200).send(skill);
+     skill.dataValues.reviews = superReviews
+   } else {
+     skill.dataValues.reviews =[];
+   }
+   console.log(skill);
+   res.status(200).send(skill);
   } catch (e) {
     res.status(404).send(e);
   }
