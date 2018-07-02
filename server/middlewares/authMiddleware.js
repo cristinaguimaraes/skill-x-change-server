@@ -7,7 +7,7 @@ require('dotenv').config({path:__dirname+'/./../../.env'});
 
 exports.authorizeUser = async (req, res, next) => {
   // if (process.env.SKIP_AUTH) next();
-  console.log('---------- inside authorizeUser ----------');
+  // console.log('---------- inside authorizeUser ----------');
 
   const authHeader = req.headers.authorization;
 
@@ -27,9 +27,9 @@ exports.authorizeUser = async (req, res, next) => {
   const appSecret = process.env.FB_APP_SECRET;
   const appsecretProof = CryptoJS.HmacSHA256(token, appSecret).toString(CryptoJS.enc.Hex);
   const baseUrl = 'https://graph.facebook.com/me?fields=id,name,email,picture,first_name,last_name,middle_name,name_format,short_name&access_token=';
-  console.log('=====>>>>> before fb call');
+  // console.log('=====>>>>> before fb call');
   const response = await fetch(baseUrl+token+'&appsecret_proof='+appsecretProof);
-  console.log('=====>>>>> after fb call');
+  // console.log('=====>>>>> after fb call');
 
   const fb_res = await response.json();
 
