@@ -152,7 +152,8 @@ exports.getUser = async (req, res) =>{
       include: [{model: db.User,
                 attributes : ['name', 'surname', 'img_url']}]
     });
-    const conversationsId = await conversations.map(conversation => conversation.pk_conversation_id);
+    if(conversations.length >0) {
+      const conversationsId = conversations.map(conversation => conversation.pk_conversation_id);
     const Sender = conversations.map(conversation => conversation.dataValues.User.dataValues)
 
     const reviews = await db.Review.findAll({
@@ -170,10 +171,11 @@ exports.getUser = async (req, res) =>{
       }
       return newReview
     })
-
-    user.dataValues.skills =  skills;
     user.dataValues.reviews = superReviews;
-
+  } else {
+    user.dataValues.reviews = [];
+  }
+    user.dataValues.skills =  skills;
     res.status = 200;
     res.send(user);
   } catch (e) {
