@@ -114,11 +114,29 @@ exports.rejectConversation = async (req, res) =>{
 exports.createMessage = async (req, res) => {
   try {
     const conversationId = req.params.id;
-    await db.Message.create ({
-      fk_conversation_id: conversationId,
-      message: req.body.message,
+    const dbResponse = await db.Conversation.findOne({
+      where: {pk_conversation_id: conversationId},
+      include: {
+        model: db.Skill,
+        attributes: ['pk_skill_id'],
+        include: {
+          model: db.User,
+          attributes: ['pk_user_id']
+        }
+      }
     });
-    res.status(201).send({response: 'Created!'});
+
+    if (req.pk_user_id === dbResponse.dataValues.fk_sender_id  ||
+        req.pk_user_id === dbResponse.dataValues.Skill.User.pk_user_id) {
+      await db.Message.create ({
+        fk_conversation_id: conversationId,
+        message: req.body.message,
+        message_creator_id: req.pk_user_id
+      });
+      res.status(201).send({response: 'created message: ' + req.body.message});
+    } else {
+      res.status(401).send({response: 'This user does not belong to this conversation'});
+    }
   } catch (e) {
     res.status(404).send(e);
   }
