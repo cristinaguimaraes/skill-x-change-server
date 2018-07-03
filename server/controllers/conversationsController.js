@@ -4,22 +4,94 @@ exports.createConversation = async (req, res) =>{
   await db.Conversation.create ({
     fk_sender_user_id: req.body.fk_sender_user_id,
     fk_skill_id: req.body.fk_skill_id,
-    approved: 0
+    approved: 0,
+    request_message: req.body.request_message
   });
-  res.status(201).send('Created!');
+  res.status(201).send({response: 'Conversation created.'});
+};
+
+exports.getConversation = async (req, res) => {
+  const conversationId = req.params.id;
+  try {
+    const conversation = await db.Conversation.findOne({
+      where: {
+        pk_conversation_id: conversationId
+      },
+      include: [
+        {model: db.User,
+          attributes: ['name', 'img_url']
+        },
+        {
+          model: db.Skill,
+          attributes: ['title'],
+          include: {
+            model: db.User,
+            attributes: ['name', 'img_url', 'pk_user_id']
+          }
+        }
+      ]
+    });
+
+    const conFiltered = {
+      ...conversation.dataValues,
+      sender_name: conversation.dataValues.User.name,
+      sender_img_url: conversation.dataValues.User.img_url,
+      skill_title: conversation.dataValues.Skill.title,
+      skill_creator_name: conversation.dataValues.Skill.User.name,
+      skill_creator_img_url: conversation.dataValues.Skill.User.img_url,
+      skill_creator_id: conversation.dataValues.Skill.User.pk_user_id
+    };
+    delete conFiltered.Skill;
+    delete conFiltered.User;
+
+    const messages = await db.Message.findAll({
+      where: {fk_conversation_id: conversationId}
+      ,
+      order: [['time_stamp', 'DESC']] 
+    });
+    conFiltered.messages = messages;
+    res.send(conFiltered);
+  } catch (e) {
+    res.status = 404;
+    res.send(e);
+  }
+
 };
 
 exports.acceptConversation = async (req, res) =>{
   try {
     const conversationId = req.params.id;
-    await db.Conversation.update({
-      approved: 1
-    }, {
+
+    const dbRes = await db.Conversation.findOne({
       where:{
-        pk_conversation_id: conversationId
+        pk_conversation_id: conversationId,
+      }
+      ,
+      include: {
+        model: db.Skill,
+        include : {
+          model: db.User,
+          where: {
+            pk_user_id: req.pk_user_id
+          }
+        }
       }
     });
-    res.status(200).send('Accepted!');
+
+    if (dbRes.dataValues.Skill) {
+      const updateRes = await db.Conversation.update({
+        approved: 1
+      },
+      {
+        where:{
+          pk_conversation_id: conversationId
+        }
+      });
+      res.status(200).send({response: 'Conversation accepted.'});
+    } else {
+      res.status(401).send({response: 'The user is not the creator of the Skill'});
+    }
+
   }  catch (e) {
     res.status(404).send(e);
   }
@@ -35,7 +107,7 @@ exports.rejectConversation = async (req, res) =>{
         pk_conversation_id: conversationId
       }
     });
-    res.status(200).send('Accepted!');
+    res.status(200).send({response: 'Conversation rejected'});
   }  catch (e) {
     res.status(404).send(e);
   }
@@ -44,11 +116,29 @@ exports.rejectConversation = async (req, res) =>{
 exports.createMessage = async (req, res) => {
   try {
     const conversationId = req.params.id;
-    await db.Message.create ({
-      fk_conversation_id: conversationId,
-      message: req.body.message,
+    const dbResponse = await db.Conversation.findOne({
+      where: {pk_conversation_id: conversationId},
+      include: {
+        model: db.Skill,
+        attributes: ['pk_skill_id'],
+        include: {
+          model: db.User,
+          attributes: ['pk_user_id']
+        }
+      }
     });
-    res.status(201).send('Created!');
+
+    if (req.pk_user_id === dbResponse.dataValues.fk_sender_id  ||
+        req.pk_user_id === dbResponse.dataValues.Skill.User.pk_user_id) {
+      await db.Message.create ({
+        fk_conversation_id: conversationId,
+        message: req.body.message,
+        message_creator_id: req.pk_user_id
+      });
+      res.status(201).send({response: 'created message: ' + req.body.message});
+    } else {
+      res.status(401).send({response: 'This user does not belong to this conversation'});
+    }
   } catch (e) {
     res.status(404).send(e);
   }

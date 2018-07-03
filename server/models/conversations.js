@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4
     },
+    request_message: {type: DataTypes.STRING},
     approved: {type: DataTypes.INTEGER, allowNull: false, defaultValue: 0}
   },
   {underscored: true});
@@ -19,11 +20,11 @@ module.exports = (sequelize, DataTypes) => {
     models.Conversation.hasMany(models.Message, {foreignKey: {name:'fk_conversation_id', allowNull: false}});
     models.Conversation.hasOne(models.Review, {foreignKey: {name:'fk_conversation_id', allowNull: false}});
     models.Conversation.belongsTo(models.Skill,{
-      onDelete: "CASCADE",
+      onDelete: 'CASCADE',
       foreignKey: { name : 'fk_skill_id', allowNull: false }
     });
     models.Conversation.belongsTo(models.User,{
-      onDelete: "CASCADE",
+      onDelete: 'CASCADE',
       foreignKey: { name : 'fk_sender_user_id', allowNull: false }
     });
   };

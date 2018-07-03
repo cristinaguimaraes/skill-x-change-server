@@ -85,7 +85,7 @@ exports.getSkill = async (req, res) =>{
    } else {
      skill.dataValues.reviews =[];
    }
-   console.log(skill);
+
    res.status(200).send(skill);
   } catch (e) {
     res.status(404).send(e);

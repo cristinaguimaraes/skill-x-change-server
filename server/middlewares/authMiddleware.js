@@ -7,6 +7,7 @@ require('dotenv').config({path:__dirname+'/./../../.env'});
 
 exports.authorizeUser = async (req, res, next) => {
   // if (process.env.SKIP_AUTH) next();
+  // console.log('---------- inside authorizeUser ----------');
 
   const authHeader = req.headers.authorization;
 
@@ -16,7 +17,6 @@ exports.authorizeUser = async (req, res, next) => {
   }
 
   const token = authHeader.split('Bearer ')[1];
-  console.log('token:', token);
 
   // Generating the appsecret_proof
   //
@@ -25,14 +25,13 @@ exports.authorizeUser = async (req, res, next) => {
   // appsecret_proof facebook server won't respond to any petition
 
   const appSecret = process.env.FB_APP_SECRET;
-  console.log('appSecret:',appSecret);
   const appsecretProof = CryptoJS.HmacSHA256(token, appSecret).toString(CryptoJS.enc.Hex);
-  console.log('appsecretProof:',appsecretProof);
   const baseUrl = 'https://graph.facebook.com/me?fields=id,name,email,picture,first_name,last_name,middle_name,name_format,short_name&access_token=';
+  // console.log('=====>>>>> before fb call');
   const response = await fetch(baseUrl+token+'&appsecret_proof='+appsecretProof);
-  const fb_res = await response.json();
+  // console.log('=====>>>>> after fb call');
 
-  console.log('========>>>>> fb_res:', fb_res);
+  const fb_res = await response.json();
 
   if (fb_res.hasOwnProperty('error')) {
     res.status(401).send(fb_res.error.message);
