@@ -7,7 +7,7 @@ exports.createConversation = async (req, res) =>{
     approved: 0,
     request_message: req.body.request_message
   });
-  res.status(201).send('Created!');
+  res.status(201).send({response: 'Conversation created.'});
 };
 
 exports.getConversation = async (req, res) => {
@@ -46,7 +46,9 @@ exports.getConversation = async (req, res) => {
 
     const messages = await db.Message.findAll({
       where: {fk_conversation_id: conversationId}
-    })
+      ,
+      order: [['time_stamp', 'DESC']] 
+    });
     conFiltered.messages = messages;
     res.send(conFiltered);
   } catch (e) {
@@ -85,7 +87,7 @@ exports.acceptConversation = async (req, res) =>{
           pk_conversation_id: conversationId
         }
       });
-      res.status(200).send({response: 'Accepted!'});
+      res.status(200).send({response: 'Conversation accepted.'});
     } else {
       res.status(401).send({response: 'The user is not the creator of the Skill'});
     }
@@ -105,7 +107,7 @@ exports.rejectConversation = async (req, res) =>{
         pk_conversation_id: conversationId
       }
     });
-    res.status(200).send({response: 'Rejected!'});
+    res.status(200).send({response: 'Conversation rejected'});
   }  catch (e) {
     res.status(404).send(e);
   }

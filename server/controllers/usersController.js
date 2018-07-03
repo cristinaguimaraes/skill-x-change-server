@@ -120,7 +120,7 @@ exports.updateMe = async (req, res) =>{
         pk_user_id: req.pk_user_id
       }
     });
-    res.status(201).send('Created!');
+    res.status(201).send({response: 'User information updated.'});
   } catch (e) {
     res.status(404).send(e);
   }
