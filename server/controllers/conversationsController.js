@@ -47,7 +47,7 @@ exports.getConversation = async (req, res) => {
     const messages = await db.Message.findAll({
       where: {fk_conversation_id: conversationId}
       ,
-      order: [['time_stamp', 'DESC']] 
+      order: [['time_stamp', 'DESC']]
     });
     conFiltered.messages = messages;
     res.send(conFiltered);
@@ -128,7 +128,7 @@ exports.createMessage = async (req, res) => {
       }
     });
 
-    if (req.pk_user_id === dbResponse.dataValues.fk_sender_id  ||
+    if (req.pk_user_id === dbResponse.dataValues.fk_sender_user_id  ||
         req.pk_user_id === dbResponse.dataValues.Skill.User.pk_user_id) {
       await db.Message.create ({
         fk_conversation_id: conversationId,
