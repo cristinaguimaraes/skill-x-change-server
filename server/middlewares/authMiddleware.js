@@ -43,7 +43,6 @@ exports.authorizeUser = async (req, res, next) => {
   let pictureData = await fetch('https://graph.facebook.com/' + fb_res.id + '/picture?type=large&width=200&height=200&redirect=0');
   pictureData =  await pictureData.json();
   const pictUrl = pictureData.data.url;
-
   let userObj = {};
   let userFromDb;
   if (user) {
