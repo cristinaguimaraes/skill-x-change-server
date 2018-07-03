@@ -112,14 +112,13 @@ exports.me = async (req, res) =>{
 
 exports.updateMe = async (req, res) =>{
   try {
-    if (Object.keys(req.body).length > 7) return res.status(400)
-    await db.User.update({
-      ...req.body
-    },{
-      where:{
-        pk_user_id: req.pk_user_id
-      }
-    });
+    const fileterdProp = {};
+    const props = ['name', 'surname', 'email', 'date_of_birth', 'nationality', 'description'];
+    props.forEach(prop => {
+      if(req.body[prop]) fileterdProp[prop] = req.body[prop];
+    })
+    const dbRes = await db.User.update(fileterdProp,
+      { where:{ pk_user_id: req.pk_user_id} });
     res.status(201).send({response: 'User information updated.'});
   } catch (e) {
     res.status(404).send(e);
