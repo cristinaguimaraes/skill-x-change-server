@@ -104,7 +104,7 @@ exports.createSkill = async (req, res) =>{
       deleted: 0,
       counter_visits: 0
     });
-    res.status(201).send('Created!');
+    res.status(201).send({response: 'The skill has been added.'});
   } catch (e) {
     res.status(404).send(e);
   }
@@ -120,7 +120,7 @@ exports.deleteSkill = async (req, res) =>{
         pk_skill_id: skillId
       }
     });
-    res.status(200).send('Deleted!');
+    res.status(200).send({response: 'The skill has been deleted.'});
   } catch (e) {
     res.status(404).send(e);
   }
