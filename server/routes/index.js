@@ -14,7 +14,7 @@ router.put('/me', authorizeUser, usersController.updateMe);
 router.get('/user/:id', usersController.getUser);
 router.get('/categories', categoriesController.getCategories);
 router.get('/skills', skillsController.getSkills);
-router.post('/skills', /*authorizeUser,*/ skillsController.createSkill);
+router.post('/skills', authorizeUser, skillsController.createSkill);
 router.get('/skills/:id', skillsController.getSkill);
 router.put('/skills/:id', authorizeUser, skillsController.deleteSkill);
 router.post('/conversation', authorizeUser, conversationsController.createConversation);

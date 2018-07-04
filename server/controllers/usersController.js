@@ -141,32 +141,44 @@ exports.getUser = async (req, res) =>{
     });
     const skillsId = await skills.map(skill => skill.pk_skill_id);
     const conversations = await db.Conversation.findAll({
-      where: {
-        fk_skill_id: skillsId
-      },
-      include: [{model: db.User,
-                attributes : ['name', 'surname', 'img_url']}]
+      where: { fk_skill_id: skillsId }
     });
-    if(conversations.length >0) {
-      const conversationsId = conversations.map(conversation => conversation.pk_conversation_id);
-    const Sender = conversations.map(conversation => conversation.dataValues.User.dataValues)
-
-    const reviews = await db.Review.findAll({
-      where:{
-        fk_conversation_id: {
-          [Op.or]: conversationsId
+    const conversationsFromSkills = await db.Conversation.findAll({
+      where: {
+        fk_skill_id: {
+          [Op.or]: skillsId
         }
       }
-    });
-    const superReviews = reviews.map((review, index) => {
-      const newReview = {...review.dataValues,
-        sender_name: Sender[index].name,
-        sender_surname: Sender[index].surname,
-        sender_img: Sender[index].img_url
-      }
-      return newReview
     })
-    user.dataValues.reviews = superReviews;
+    if(conversations.length >0) {
+      const conversationsId = conversationsFromSkills.map(conversation => conversation.pk_conversation_id);
+
+      const reviews = await db.Review.findAll({
+        where: {
+        fk_conversation_id: { [Op.or]: conversationsId}
+        },
+        include: [{
+          model: db.Conversation,
+          include: [{
+            model: db.User,
+            attributes: ['name', 'surname', 'img_url', 'pk_user_id']
+          }]
+        }],
+        order: [['time_stamp', 'DESC']]
+      });
+
+      const filteredReviews = reviews.map( review => {
+        const filteredReview = {
+          ...review.dataValues,
+          sender_id: review.dataValues.Conversation.User.pk_user_id,
+          sender_name: review.dataValues.Conversation.User.name,
+          sender_surname: review.dataValues.Conversation.User.surname,
+          sender_img_url: review.dataValues.Conversation.User.img_url
+        }
+        delete filteredReview.Conversation;
+        return filteredReview
+      })
+       user.dataValues.reviews = filteredReviews;
   } else {
     user.dataValues.reviews = [];
   }
