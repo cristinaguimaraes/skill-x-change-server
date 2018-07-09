@@ -1,5 +1,4 @@
 # singular-server
-![Singular](src/assets/logo-singular.svg)
 
 Singular is a platform to explore and connect with peers through the power of learning and teaching.
 
