@@ -62,3 +62,10 @@ npm run dev
 ## 5. You are ready to set up the front end!
 
 Navigate to [singular-client](https://github.com/CKGHarju/singular-client) and follow the instructions in the README.md to finish the setup and run the application.
+
+# Project Contributors
+
+- [Cristina Guimaraes](https://github.com/cristinaguimaraes), Back End
+- [David Rebolleda](https://github.com/davidecorreu), Back End
+- [Christopher Harju](https://github.com/CKGHarju/skill-x-change-client), Front End
+- [Pablo Anttila](https://github.com/papplo), Front End
