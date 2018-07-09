@@ -66,3 +66,11 @@ npm run dev
 ## 5. You are ready to set up the front end!
 
 Navigate to [skill-x-change-client](https://github.com/CKGHarju/skill-x-change-client) and follow the instructions in the README.md to finish the setup and run the application.
+
+# Tech stack
+
+### Built with
+
+- Express.js
+- MySQL
+- Sequelize
