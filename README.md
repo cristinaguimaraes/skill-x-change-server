@@ -1,4 +1,4 @@
-# singular-server
+# Singular-server
 
 Singular is a platform to explore and connect with peers through the power of learning and teaching.
 
