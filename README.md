@@ -1,5 +1,11 @@
-# skill-x-change-server
-skill-x-change (working title) is a platform for creating social connections by teaching and learning from eachothers.
+# singular-server
+![Singular](src/assets/logo-singular.svg)
+
+Singular is a platform to explore and connect with peers through the power of learning and teaching.
+
+Singular is open and free to use, it enables a user to curate his profile and offer to teach unique skills to the community of users, all in a simple and friendly interface coupled to a secure login.
+
+![Uses ecmascript](https://forthebadge.com/images/badges/uses-js.svg)
 
 # Running the Backend
 
