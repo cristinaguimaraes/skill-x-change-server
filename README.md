@@ -1,5 +1,4 @@
 # singular-server
-![Singular](https://raw.githubusercontent.com/CKGHarju/skill-x-change-client/develop/src/assets/logo-singular.svg)
 
 Singular is a platform to explore and connect with peers through the power of learning and teaching.
 
@@ -25,24 +24,19 @@ Singular is open and free to use, it enables a user to curate his profile and of
 
 Clone the `skill-x-change-server code` locally. In a terminal, run:
 
-  `git clone https://github.com/cristinaguimaraes/skill-x-change-server.git`
+  `git clone https://github.com/cristinaguimaraes/singular-server.git`
   
 ## 2. Set up mySql
 
 In the terminal, run:
 
 ```
-mysql --password -u root
-```
-
-When prompted, enter the mySql password.
-
-Then, run:
+mysqladmin create singular_db -u <username> -p
+mysql singular_db < SingularMockData.sql -u <username> -p
 
 ```
-create database skill_x_change_db;
 
-```
+
 ## 3. Create the env file
 
 In your text editor create the .env file
@@ -53,16 +47,18 @@ DB_PORT=3306
 DB_USER='your mysql user'
 DB_PASSWORD='your mysql password'
 FB_APP_SECRET=
+SERVER_PORT=3010
+SERVER_IP=127.0.0.1
+LOCARL_SERVER_IP=
 ``` 
 ## 4. Run the server
 
 In a new tab in the terminal, run:
 ```
 npm install
-node server/createCategories.js
 npm run dev
 ```
 
 ## 5. You are ready to set up the front end!
 
-Navigate to [skill-x-change-client](https://github.com/CKGHarju/skill-x-change-client) and follow the instructions in the README.md to finish the setup and run the application.
+Navigate to [singular-client](https://github.com/CKGHarju/skill-x-change-client) and follow the instructions in the README.md to finish the setup and run the application.
