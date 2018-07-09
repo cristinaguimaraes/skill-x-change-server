@@ -28,7 +28,7 @@ Clone the `skill-x-change-server code` locally. In a terminal, run:
   
 ## 2. Set up mySql
 
-In the terminal in the server folder, run:
+In the terminal, in the server folder, run:
 
 ```
 mysqladmin create singular_db -u <username> -p
