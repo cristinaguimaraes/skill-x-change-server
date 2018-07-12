@@ -12,6 +12,7 @@ Singular is open and free to use, it enables a user to curate his profile and of
 - [npm] (https://www.npmjs.com/)  
 - [mySql] (https://www.mysql.com/)
 - [Node] (https://nodejs.org/en/)
+- Create an new app in facebook developers console, and in the settings/advance activate the 'Require app secret'.
 
 ## Steps
   1. [Clone the repo](#1-clone-the-repo)
