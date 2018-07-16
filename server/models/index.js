@@ -10,13 +10,14 @@ require('dotenv').config({path:__dirname+'/./../../.env'});
 const dbPort = process.env.DB_PORT || 3306;
 
 // use this line if you are hosting the database
-const hostIp = process.env.SERVER_IP;
+// console.log('process.env.DB_LOCAL_NETWORK_IP:',process.env.DB_LOCAL_NETWORK_IP, 'process.env.DB_LOCAL_HOST_IP:',process.env.DB_LOCAL_HOST_IP);
+const dbHostIp = process.env.DB_LOCAL_NETWORK_IP || process.env.DB_LOCAL_HOST_IP || '127.0.0.1';
 
 // use this line if you are connecting to local network database
 // const hostIp = process.env.LOCAL_SERVER_IP;
 
 const sequelize = new Sequelize('singular_db', process.env.DB_USER, process.env.DB_PASSWORD, {
-  host: hostIp,
+  host: dbHostIp,
   dialect: 'mysql',
   port: dbPort,
 
